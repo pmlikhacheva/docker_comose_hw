@@ -27,22 +27,39 @@ POSTGRES_PASSWORD=...
 REDIS_URL=redis://redis:6379/0
 APP_NAME=MyApp
 ## Структура репозитория
+
 variant-2/
+
 ├── compose.yaml
+
 ├── .env.example
+
 ├── .gitignore
+
 ├── nginx/
+
 │   └── nginx.conf
+
 ├── app/
+
 │   ├── Dockerfile
+
 │   ├── requirements.txt
+
 │   └── app.py
+
 ├── screenshots/
+
 │   ├── main_page.png
+
 │   ├── visits_fresh.png
+
 │   ├── visits_cached.png
+
 │   └── compose_ps.png
+
 └── README.md
+
 ## Команды проверки
 ```bash
 curl http://localhost/          →  HTML-страница
