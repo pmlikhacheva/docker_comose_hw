@@ -6,59 +6,48 @@ Flask + PostgreSQL + Redis + Nginx
 
 ## Что реализовать
 1. compose.yaml с четырьмя сервисами:
-•	nginx — reverse proxy, порт 80
-•	app — Flask-приложение (кастомный Dockerfile на python:3.11-slim)
-•	postgres — PostgreSQL 15
-•	redis — Redis 7 (кэш)
-2. Flask-приложение (app/app.py) — три эндпоинта:
-•	GET /  — HTML-страница, выводит имя приложения из переменной APP_NAME
-•	GET /visits  — JSON {"total": N, "cached": true/false}  (Redis кэширует на 10 сек)
-•	GET /health  — JSON {"status": "ok", "db": "connected", "redis": "connected"}
-3. Две изолированные сети:
-•	frontend — nginx + app
-•	backend — app + postgres + redis  (postgres и redis недоступны снаружи)
-4. Именованный том для данных PostgreSQL.
-5. Healthcheck для postgres (pg_isready) и redis (redis-cli ping):
+  - nginx — reverse proxy, порт 80
+  - app — Flask-приложение (кастомный Dockerfile на python:3.11-slim)
+  - postgres — PostgreSQL 15
+  - redis — Redis 7 (кэш)
+3. Flask-приложение (app/app.py) — три эндпоинта:
+   - GET /  — HTML-страница, выводит имя приложения из переменной APP_NAME
+   - GET /visits  — JSON {"total": N, "cached": true/false}  (Redis кэширует на 10 сек)
+   - GET /health  — JSON {"status": "ok", "db": "connected", "redis": "connected"}
+4. Две изолированные сети:
+  - frontend — nginx + app
+  - backend — app + postgres + redis  (postgres и redis недоступны снаружи)
+5. Именованный том для данных PostgreSQL.
+6. Healthcheck для postgres (pg_isready) и redis (redis-cli ping):
 app использует depends_on с condition: service_healthy для обоих.
-6. .env-файл для всех паролей и настроек:
+7. .env-файл для всех паролей и настроек:
+```
 POSTGRES_DB=appdb
 POSTGRES_USER=app_user
 POSTGRES_PASSWORD=...
 REDIS_URL=redis://redis:6379/0
 APP_NAME=MyApp
+```
 ## Структура репозитория
 
+```
 variant-2/
-
 ├── compose.yaml
-
 ├── .env.example
-
 ├── .gitignore
-
 ├── nginx/
-
 │   └── nginx.conf
-
 ├── app/
-
 │   ├── Dockerfile
-
 │   ├── requirements.txt
-
 │   └── app.py
-
 ├── screenshots/
-
 │   ├── main_page.png
-
 │   ├── visits_fresh.png
-
 │   ├── visits_cached.png
-
 │   └── compose_ps.png
-
 └── README.md
+```
 
 ## Команды проверки
 ```bash
